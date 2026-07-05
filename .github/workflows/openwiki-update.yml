@@ -34,7 +34,7 @@ jobs:
           node --version
           npm --version
           npm install --global openwiki
-          openwiki --version
+          command -v openwiki
 
       - name: Run OpenWiki
         run: |
