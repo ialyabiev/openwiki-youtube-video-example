@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 // These numbers are contractual for Enterprise. Confirm with the
 // platform team before changing them.
 const LIMITS: Record<string, number> = {
-  free: 60,
+  free: 600,
   pro: 900,
   enterprise: 3000
 };
