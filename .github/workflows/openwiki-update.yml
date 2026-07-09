@@ -22,44 +22,9 @@ jobs:
       - name: Install OpenWiki
         run: npm install --global openwiki
 
-      - name: Check LangSmith authentication
-        run: |
-          endpoint="${LANGSMITH_ENDPOINT_SECRET:-https://api.smith.langchain.com}"
-          endpoint="${endpoint%/}"
-
-          echo "LangSmith endpoint host: $(node -e "console.log(new URL(process.argv[1]).host)" "$endpoint")"
-
-          headers=(--header "x-api-key: ${LANGSMITH_API_KEY}")
-          if [ -n "${LANGSMITH_WORKSPACE_ID:-}" ]; then
-            headers+=(--header "x-tenant-id: ${LANGSMITH_WORKSPACE_ID}")
-          fi
-
-          status=$(curl --silent --show-error --output /tmp/langsmith-response.txt --write-out "%{http_code}" \
-            "${headers[@]}" \
-            "$endpoint/api/v1/sessions?limit=1")
-
-          echo "LangSmith auth check status: $status"
-          if [ "$status" = "401" ] || [ "$status" = "403" ]; then
-            echo "::warning::LangSmith rejected the configured API key, endpoint, or workspace. Trace upload will fail until this is fixed."
-          fi
-        env:
-          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
-          LANGSMITH_ENDPOINT_SECRET: ${{ secrets.LANGSMITH_ENDPOINT }}
-          LANGSMITH_WORKSPACE_ID: ${{ secrets.LANGSMITH_WORKSPACE_ID }}
-
       - name: Run OpenWiki
-        run: |
-          if [ -n "${LANGSMITH_ENDPOINT_SECRET:-}" ]; then
-            export LANGSMITH_ENDPOINT="$LANGSMITH_ENDPOINT_SECRET"
-            export LANGCHAIN_ENDPOINT="$LANGSMITH_ENDPOINT_SECRET"
-          fi
-
-          if [ -n "${LANGSMITH_WORKSPACE_ID_SECRET:-}" ]; then
-            export LANGSMITH_WORKSPACE_ID="$LANGSMITH_WORKSPACE_ID_SECRET"
-            export LANGCHAIN_WORKSPACE_ID="$LANGSMITH_WORKSPACE_ID_SECRET"
-          fi
-
-          openwiki code --update --print \
+        run: >
+          openwiki code --update --print
             "Update only repository documentation under openwiki/. Do not edit AGENTS.md or .github workflows. Refresh the wiki from the current repository source, including rate limits in src/middleware/rateLimit.ts."
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -67,8 +32,6 @@ jobs:
           LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           LANGSMITH_TRACING: "true"
           LANGSMITH_PROJECT: openwiki
-          LANGSMITH_ENDPOINT_SECRET: ${{ secrets.LANGSMITH_ENDPOINT }}
-          LANGSMITH_WORKSPACE_ID_SECRET: ${{ secrets.LANGSMITH_WORKSPACE_ID }}
           LANGCHAIN_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           LANGCHAIN_PROJECT: openwiki
           LANGCHAIN_TRACING_V2: "true"
