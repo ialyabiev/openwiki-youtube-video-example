@@ -29,9 +29,11 @@ jobs:
         run: |
           if [ -n "${LANGSMITH_ENDPOINT_SECRET:-}" ]; then
             export LANGSMITH_ENDPOINT="$LANGSMITH_ENDPOINT_SECRET"
+            export LANGCHAIN_ENDPOINT="$LANGSMITH_ENDPOINT_SECRET"
           fi
 
-          openwiki code --update --print
+          openwiki code --update --print \
+            "Update only repository documentation under openwiki/. Do not edit AGENTS.md or .github workflows. Refresh the wiki from the current repository source, including rate limits in src/middleware/rateLimit.ts."
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENWIKI_MODEL_ID: anthropic/claude-haiku-4.5
@@ -42,6 +44,11 @@ jobs:
           LANGCHAIN_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           LANGCHAIN_PROJECT: openwiki
           LANGCHAIN_TRACING_V2: "true"
+
+      - name: Keep only OpenWiki documentation changes
+        run: |
+          git restore --staged --worktree -- . ':!openwiki'
+          git status --short
 
       - name: Create OpenWiki update pull request
         uses: peter-evans/create-pull-request@v7
