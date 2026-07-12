@@ -25,7 +25,7 @@ jobs:
         run: npm install --global openwiki
 
       - name: Run OpenWiki
-        run: openwiki code --update --print "Update only repository documentation under openwiki/. Do not edit AGENTS.md, CLAUDE.md, or .github workflows."
+        run: openwiki code --update --print "Update only repository documentation under openwiki/. Do not edit AGENTS.md, CLAUDE.md, or .github workflows. Refresh the wiki from the current repository source, including rate limits in src/middleware/rateLimit.ts."
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENWIKI_MODEL_ID: z-ai/glm-5.2
