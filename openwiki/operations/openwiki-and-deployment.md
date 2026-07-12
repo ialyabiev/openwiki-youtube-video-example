@@ -112,7 +112,7 @@ Current workflow behavior from `.github/workflows/openwiki-update.yml`:
 - Triggers: manual `workflow_dispatch` and a scheduled daily cron (`0 8 * * *`).
 - Runner: `ubuntu-latest` with Node.js `22`.
 - Installs OpenWiki globally with `npm install --global openwiki`.
-- Runs `openwiki code --update --print` with an instruction to update only `openwiki/`.
+- Runs `openwiki code --update --print` (no inline instruction string; the update scope is controlled by the workflow environment and agent instructions).
 - Sets `OPENROUTER_API_KEY`, `OPENWIKI_MODEL_ID=z-ai/glm-5.2`, and LangSmith tracing environment variables from repository secrets/environment.
 - Opens or updates branch `openwiki/update` through `peter-evans/create-pull-request`.
 
@@ -120,9 +120,12 @@ Current PR add paths include:
 
 ```text
 openwiki
+AGENTS.md
+CLAUDE.md
+.github/workflows/openwiki-update.yml
 ```
 
-This avoids requiring a token that can create or update GitHub Actions workflow files.
+The PR scope was broadened to include agent instruction files and the workflow itself, so the update PR can reflect changes to those files alongside generated wiki content.
 
 ## Running OpenWiki locally
 
