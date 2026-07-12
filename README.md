@@ -5,8 +5,8 @@ Internal task API. Run with npm run dev.
 ## OpenWiki workflow
 
 The `OpenWiki Update` GitHub Actions workflow updates repository docs under
-`openwiki/`. It runs only when manually triggered with `workflow_dispatch` in
-`.github/workflows/openwiki-update.yml`.
+`openwiki/`. It runs on a daily schedule and can also be triggered manually with
+`workflow_dispatch` in `.github/workflows/openwiki-update.yml`.
 
 ## How To Run OpenWiki
 

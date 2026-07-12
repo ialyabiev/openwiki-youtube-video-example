@@ -25,7 +25,7 @@ jobs:
         run: npm install --global openwiki
 
       - name: Run OpenWiki
-        run: openwiki code --update --print
+        run: openwiki code --update --print "Update only repository documentation under openwiki/. Do not edit AGENTS.md, CLAUDE.md, or .github workflows."
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENWIKI_MODEL_ID: z-ai/glm-5.2
@@ -35,9 +35,6 @@ jobs:
         with:
           add-paths: |
             openwiki
-            AGENTS.md
-            CLAUDE.md
-            .github/workflows/openwiki-update.yml
           branch: openwiki/update
           commit-message: "docs: update OpenWiki"
           title: "docs: update OpenWiki"
