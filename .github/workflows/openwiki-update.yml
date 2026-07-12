@@ -2,6 +2,8 @@ name: OpenWiki Update
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
 
 permissions:
   contents: write
@@ -23,21 +25,19 @@ jobs:
         run: npm install --global openwiki
 
       - name: Run OpenWiki
-        run: |
-          openwiki code --update --print "Update only repository documentation under openwiki/. Do not edit AGENTS.md or .github workflows. Refresh the wiki from the current repository source, including rate limits in src/middleware/rateLimit.ts."
+        run: openwiki code --update --print
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENWIKI_MODEL_ID: z-ai/glm-5.2
 
-      - name: Keep only OpenWiki documentation changes
-        run: |
-          git restore --staged --worktree -- . ':!openwiki'
-          git status --short
-
       - name: Create OpenWiki update pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
         with:
-          add-paths: openwiki
+          add-paths: |
+            openwiki
+            AGENTS.md
+            CLAUDE.md
+            .github/workflows/openwiki-update.yml
           branch: openwiki/update
           commit-message: "docs: update OpenWiki"
           title: "docs: update OpenWiki"
