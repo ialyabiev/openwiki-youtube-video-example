@@ -1,4 +1,9 @@
-# meridian-tasks-api
+# meridian-tasks-api (copy)
+  
+**Original video**: https://www.youtube.com/watch?v=L9GUw_US2WU  
+  
+**Original repo**: 7
+ https://github.com/sudarshan-koirala/openwiki-youtube-video-example
 
 Internal task API. Run with npm run dev.
 
